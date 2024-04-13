@@ -78,45 +78,6 @@ void Run()
         Drive(baseSpeed, baseSpeed);
     }
 }
-void Run()
-{
-    int weights[] = {-2, -1, 0, 1, 2};    // weights for each sensor
-    int sensors[] = {S1, S2, S3, S4, S5}; // sensor readings
-    int position = 0;                     // position of the line
-    int total = 0;                        // total sensor value
-
-    for (int i = 0; i < 5; i++)
-    {
-        position += weights[i] * sensors[i];
-        total += sensors[i];
-    }
-    // 0 1 1 1 1
-    //
-    if (total != 0)
-    {
-        position /= total;
-    }
-
-    int baseSpeed = 60;
-    int maxSpeed = 80;
-    int speedDifference = maxSpeed - baseSpeed;
-
-    if (position < 0)
-    {
-        // line is to the left
-        Turn_Left(baseSpeed + speedDifference * (-position), baseSpeed);
-    }
-    else if (position > 0)
-    {
-        // line is to the right
-        Turn_Right(baseSpeed, baseSpeed + speedDifference * position);
-    }
-    else
-    {
-        // line is straight ahead
-        ForWard(maxSpeed, maxSpeed);
-    }
-}
 void Read_Button()
 {
     int reading = Button_Read(BUTTON_ONOFF);
