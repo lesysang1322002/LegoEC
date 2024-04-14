@@ -20,6 +20,7 @@ void Turn_Right(int Speed_M_1, int Speed_M_2);
 void ForWard(int Speed);
 void BackWard(int Speed);
 void Run();
+void Stop();
 
 int Status_Robot = 0;
 int S1, S2, S3, S4, S5;
@@ -33,46 +34,46 @@ int main(void)
 	Sensor_Init();
 	while (1)
 	{
-		Read_Button();
+		//		Read_Button();
 		Sensor_Read_All();
-		Delay_ms(50);
-		if (Status_Robot == ON)
-		{
-			Run();
-		}
+		//		Delay_ms(50);
+		//		if (Status_Robot == ON)
+		//		{
+		Run();
 	}
 }
 void Run()
 {
-	int S = S1 * 10000 + S2 * 1000 + S3 * 100 + S4 * 10 + S5;
-
-	switch (S)
-	{
-	case 11011:
+	// em đang quay lại với if else vì switch case không hoạt động với S1=0, vì nó đang là kiểu int
+	// em đang viết lại hàm này vì if else này rắc rối quá
+	if (S1 == 1 && S2 == 1 && S3 == 0 && S4 == 1 && S5 == 1)
 		ForWard(baseSpeed + turnSpeed);
-		break;
-	case 01111:
-		Turn_Left(baseSpeed, baseSpeed + turnSpeed); // re bang cach quay nguoc banh trai to do 80
-		break;
-	case 11110:
-		Turn_Right(baseSpeed + turnSpeed, baseSpeed); // re bang cach quay nguoc banh phai to do 80
-		break;
-	case 10111:
-		Turn_Left(baseSpeed, baseSpeed - turnSpeed); // re bang cach quay nguoc banh trai to do 40
-		break;
-	case 11101:
-		Turn_Right(baseSpeed - turnSpeed, baseSpeed); // re bang cach quay nguoc banh phai to do 40
-		break;
-	case 00111:
-		Turn_Left(baseSpeed, baseSpeed); // re bang cach quay nguoc banh trai to do 60
-		break;
-	case 11100:
-		Turn_Right(baseSpeed, baseSpeed); // re bang cach quay nguoc banh phai to do 60
-		break;
-	default:
-		BackWard(baseSpeed);
-		break;
-	}
+	else if (S1 == 1 && S2 == 1 && S3 == 0 && S4 == 0 && S5 == 1)
+		ForWard(baseSpeed + turnSpeed);
+	else if (S1 == 1 && S2 == 0 && S3 == 0 && S4 == 1 && S5 == 1)
+		ForWard(baseSpeed + turnSpeed);
+	else if (S1 == 0 && S2 == 1 && S3 == 1 && S4 == 1 && S5 == 1)
+		Turn_Left(40, 4);
+	else if (S1 == 1 && S2 == 1 && S3 == 1 && S4 == 1 && S5 == 0)
+		Turn_Right(4, 40);
+	else if (S1 == 1 && S2 == 1 && S3 == 0 && S4 == 1 && S5 == 0)
+		Turn_Right(4, 40);
+	else if (S1 == 1 && S2 == 0 && S3 == 1 && S4 == 1 && S5 == 1)
+		Turn_Left(40, 4);
+	else if (S1 == 1 && S2 == 1 && S3 == 1 && S4 == 0 && S5 == 1)
+		Turn_Right(4, 40);
+	else if (S1 == 0 && S2 == 0 && S3 == 1 && S4 == 1 && S5 == 1)
+		Turn_Left(40, 4);
+	else if (S1 == 1 && S2 == 1 && S3 == 1 && S4 == 0 && S5 == 0)
+		Turn_Right(4, 40);
+	else if (S1 == 0 && S2 == 0 && S3 == 0 && S4 == 1 && S5 == 1)
+		Turn_Left(40, 4);
+	else if (S1 == 1 && S2 == 1 && S3 == 0 && S4 == 0 && S5 == 0)
+		Turn_Right(4, 40);
+	else if (S1 == 1 && S2 == 1 && S3 == 1 && S4 == 1 && S5 == 1)
+		BackWard(60);
+	else
+		Stop();
 }
 void Read_Button()
 {
@@ -95,6 +96,7 @@ void Read_Button()
 }
 void Sensor_Read_All()
 {
+	S1 = 0, S2 = 0, S3 = 0, S4 = 0, S5 = 0;
 	S1 = Sensor_Read(SENSOR_PIN1);
 	S2 = Sensor_Read(SENSOR_PIN2);
 	S3 = Sensor_Read(SENSOR_PIN3);
@@ -120,4 +122,9 @@ void Turn_Right(int Speed_M_1, int Speed_M_2)
 {
 	Motor_SetBackward(MOTOR_1, Speed_M_1);
 	Motor_SetForward(MOTOR_2, Speed_M_2);
+}
+void Stop()
+{
+	Motor_SetStopping(MOTOR_1);
+	Motor_SetStopping(MOTOR_2);
 }
