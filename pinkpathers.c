@@ -45,34 +45,51 @@ int main(void)
 }
 void Run()
 {
-	if (S1 == 1 && S2 == 1 && S3 == 0 && S4 == 1 && S5 == 1)
+	int S = S1 * 10000 + S2 * 1000 + S3 * 100 + S4 * 10 + S5;
+
+	switch (S)
+	{
+	case 11011:
+	case 11001:
+	case 10011:
 		ForWard(baseSpeed + turnSpeed);
-	else if (S1 == 1 && S2 == 1 && S3 == 0 && S4 == 0 && S5 == 1)
-		ForWard(baseSpeed + turnSpeed);
-	else if (S1 == 1 && S2 == 0 && S3 == 0 && S4 == 1 && S5 == 1)
-		ForWard(baseSpeed + turnSpeed);
-	else if (S1 == 0 && S2 == 1 && S3 == 1 && S4 == 1 && S5 == 1)
+		break;
+	case 1111:
 		Turn_Left(40, 4);
-	else if (S1 == 1 && S2 == 1 && S3 == 1 && S4 == 1 && S5 == 0)
+		break;
+	case 11110:
 		Turn_Right(4, 40);
-	else if (S1 == 1 && S2 == 1 && S3 == 0 && S4 == 1 && S5 == 0)
-		Turn_Right(4, 40);
-	else if (S1 == 1 && S2 == 0 && S3 == 1 && S4 == 1 && S5 == 1)
+		break;
+	case 1011:
 		Turn_Left(40, 4);
-	else if (S1 == 1 && S2 == 1 && S3 == 1 && S4 == 0 && S5 == 1)
+		break;
+	case 11010:
 		Turn_Right(4, 40);
-	else if (S1 == 0 && S2 == 0 && S3 == 1 && S4 == 1 && S5 == 1)
+		break;
+	case 10111:
 		Turn_Left(40, 4);
-	else if (S1 == 1 && S2 == 1 && S3 == 1 && S4 == 0 && S5 == 0)
+		break;
+	case 11101:
 		Turn_Right(4, 40);
-	else if (S1 == 0 && S2 == 0 && S3 == 0 && S4 == 1 && S5 == 1)
+		break;
+	case 111:
 		Turn_Left(40, 4);
-	else if (S1 == 1 && S2 == 1 && S3 == 0 && S4 == 0 && S5 == 0)
+		break;
+	case 11100:
 		Turn_Right(4, 40);
-	else if (S1 == 1 && S2 == 1 && S3 == 1 && S4 == 1 && S5 == 1)
+		break;
+	case 11:
+		Turn_Left(40, 4);
+		break;
+	case 11000:
+		Turn_Right(4, 40);
+		break;
+	case 11111:
 		Previous();
-	else
+	default:
 		Previous();
+		break;
+	}
 }
 void Read_Button()
 {
