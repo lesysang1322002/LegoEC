@@ -21,7 +21,8 @@ void ForWard(int Speed);
 void BackWard(int Speed);
 void Run();
 void Stop();
-
+void Previous();
+int previous_status = 0;
 int Status_Robot = 0;
 int S1, S2, S3, S4, S5;
 
@@ -44,8 +45,6 @@ int main(void)
 }
 void Run()
 {
-	// em đang quay lại với if else vì switch case không hoạt động với S1=0, vì nó đang là kiểu int
-	// em đang viết lại hàm này vì if else này rắc rối quá
 	if (S1 == 1 && S2 == 1 && S3 == 0 && S4 == 1 && S5 == 1)
 		ForWard(baseSpeed + turnSpeed);
 	else if (S1 == 1 && S2 == 1 && S3 == 0 && S4 == 0 && S5 == 1)
@@ -71,9 +70,9 @@ void Run()
 	else if (S1 == 1 && S2 == 1 && S3 == 0 && S4 == 0 && S5 == 0)
 		Turn_Right(4, 40);
 	else if (S1 == 1 && S2 == 1 && S3 == 1 && S4 == 1 && S5 == 1)
-		BackWard(60);
+		Previous();
 	else
-		Stop();
+		Previous();
 }
 void Read_Button()
 {
@@ -107,6 +106,7 @@ void ForWard(int Speed)
 {
 	Motor_SetForward(MOTOR_1, Speed);
 	Motor_SetForward(MOTOR_2, Speed);
+	int previous_status = 1;
 }
 void BackWard(int Speed)
 {
@@ -117,14 +117,25 @@ void Turn_Left(int Speed_M_1, int Speed_M_2)
 {
 	Motor_SetForward(MOTOR_1, Speed_M_1);
 	Motor_SetBackward(MOTOR_2, Speed_M_2);
+	int previous_status = 2;
 }
 void Turn_Right(int Speed_M_1, int Speed_M_2)
 {
 	Motor_SetBackward(MOTOR_1, Speed_M_1);
 	Motor_SetForward(MOTOR_2, Speed_M_2);
+	int previous_status = 3;
 }
 void Stop()
 {
 	Motor_SetStopping(MOTOR_1);
 	Motor_SetStopping(MOTOR_2);
+}
+void Previous()
+{
+	if (previous_status == 1)
+		ForWard(80);
+	else if (previous_status == 2)
+		Turn_Left(40, 4);
+	else if (previous_status == 3)
+		Turn_Right(4, 40);
 }
