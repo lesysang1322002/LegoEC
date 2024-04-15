@@ -103,7 +103,9 @@ void Run()
 		break;
 	case 11111:
 		if (status_previous_flag != status_previous)
+		{
 			UARTPrintf_Number(status_previous);
+		}
 		Previous();
 	case 00000:
 		Stop();
@@ -144,7 +146,7 @@ void ForWard(int Speed)
 {
 	Motor_SetForward(MOTOR_1, Speed);
 	Motor_SetForward(MOTOR_2, Speed);
-	int status_previous = 2;
+	status_previous = 2;
 }
 void BackWard(int Speed)
 {
@@ -155,13 +157,13 @@ void Turn_Left(int Speed_M_1, int Speed_M_2)
 {
 	Motor_SetForward(MOTOR_1, Speed_M_1);
 	Motor_SetBackward(MOTOR_2, Speed_M_2);
-	int status_previous = 3;
+	status_previous = 3;
 }
 void Turn_Right(int Speed_M_1, int Speed_M_2)
 {
 	Motor_SetBackward(MOTOR_1, Speed_M_1);
 	Motor_SetForward(MOTOR_2, Speed_M_2);
-	int status_previous = 4;
+	status_previous = 4;
 }
 void Stop()
 {
