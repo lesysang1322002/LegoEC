@@ -4,11 +4,11 @@
 #include "button.h"
 #include "sensor.h"
 
-#define MOTOR_MEAN 50;
+#define MOTOR_MEAN 50
 
 
 char readSensors() {
-    char sensor = {'0', '0', '0'};
+    char sensor[3] = {'0', '0', '0'};
     if(Sensor_Read(SENSOR_PIN2) == SENSOR_ON)
         sensor[0] = '1';
     if(Sensor_Read(SENSOR_PIN3) == SENSOR_ON)
@@ -54,7 +54,7 @@ int main(void) {
 
     while (1) {
         if(Button_Read(BUTTON_RUN) == Press){
-        char sensorData = readSensors();
+        char sensorResult = readSensors();
         switch(sensorResult){
             case 100:
                 TurnLeft();
