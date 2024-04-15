@@ -72,34 +72,34 @@ void Run()
 		ForWard(baseSpeed);
 		break;
 	case 1111:
-		Turn_Left(60, 20);
+		Turn_Left(40, 4);
 		break;
 	case 11110:
-		Turn_Right(60, 20);
+		Turn_Right(4, 40);
 		break;
 	case 1011:
-		Turn_Left(60, 20);
+		Turn_Left(40, 4);
 		break;
 	case 11010:
-		Turn_Right(60, 20);
+		Turn_Right(4, 40);
 		break;
 	case 10111:
-		Turn_Left(60, 20);
+		Turn_Left(40, 4);
 		break;
 	case 11101:
-		Turn_Right(60, 20);
+		Turn_Right(4, 40);
 		break;
 	case 111:
-		Turn_Left(60, 20);
+		Turn_Left(40, 4);
 		break;
 	case 11100:
-		Turn_Right(60, 20);
+		Turn_Right(4, 40);
 		break;
 	case 11:
-		Turn_Left(60, 20);
+		Turn_Left(40, 4);
 		break;
 	case 11000:
-		Turn_Right(60, 20);
+		Turn_Right(4, 40);
 		break;
 	case 11111:
 		if (status_previous_flag != status_previous)
@@ -176,9 +176,9 @@ void Previous()
 	if (status_previous == 2)
 		ForWard(80);
 	else if (status_previous == 3)
-		Turn_Left(60, 20);
+		Turn_Left(40, 4);
 	else if (status_previous == 4)
-		Turn_Right(60, 20);
+		Turn_Right(4, 40);
 }
 void USART_PRINT()
 {
