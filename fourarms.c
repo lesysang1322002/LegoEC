@@ -3,120 +3,92 @@
 #include "motor.h"
 #include "button.h"
 #include "sensor.h"
+#include "uart.h"
+int status_previous = 0;
+int previous_status = 0;
+void ReTrai(double SpeedM1);
+void RePhai(double SpeedM2);	
+void dithang(double SpeedM1);
+void oldstatus();
+uint16_t SensorRead(uint16_t pin);
 
-#define maxSpeed  80
-#define baseSpeed 60
-#define turnSpeed 20
-
-int count = 0;
-int buttonState = 0;
-int lastButtonState = 0;
-
-void Sensor_Read_All();
-void Read_Button();
-void Turn_Left(int Speed_M_1, int Speed_M_2);
-void Turn_Right(int Speed_M_1, int Speed_M_2);
-void ForWard(int Speed);
-void BackWard(int Speed);
-void Run();
-
-int Status_Robot = 0;
-int Sensors[5];
-
-int main(void)
-{
+uint8_t Sensor_v[5];
+int main(void){
 	Delay_Init();
 	Led_Init();
 	Motor_Init();
 	Button_Init();
 	Sensor_Init();
-	while (1)
-	{
-		Read_Button();
-		Sensor_Read_All();
-		Delay_ms(50);
-		if (Status_Robot == 1)
-		{
-			Run();
-		}
+	USART_config();
+	GPIO_Config_TX_RX();	
+	//Motor_SetForward(2,60);
+	while(1){
+	uint8_t sensor1 = Sensor_Read(SENSOR_PIN1);
+    uint8_t sensor2 = Sensor_Read(SENSOR_PIN2);
+    uint8_t sensor3 = Sensor_Read(SENSOR_PIN3);
+    uint8_t sensor4 = Sensor_Read(SENSOR_PIN4);
+    uint16_t sensor5 = SensorRead(SENSOR_PIN5);
+		if (sensor1 && sensor2 && sensor3 && sensor4 && sensor5) {
+          
+            previous_status = status_previous;
+        }
+        oldstatus();
+		switch ((sensor1 << 4) | (sensor2 << 3) | (sensor3 << 2) | (sensor4 << 1) | sensor5) {
+			case 0b10011:
+				ReTrai(30);
+				break;
+			case 0b11101:
+				RePhai(30);
+				break;
+			case 0b11011:
+				dithang(30);
+				break;
+			case 0b11000:
+				RePhai(30);
+				break;
+			case 0b00011:
+				ReTrai(30);
+				break;
+			case 0b11111:
+				oldstatus();
+				break;
+			default:
+		  		
+					break;
 	}
-}
-void Run()
-{
-    int S = Sensors[0] * 16 + Sensors[1] * 8 + Sensors[2] * 4 + Sensors[3] * 2 + Sensors[4];
+	Delay_ms(300);
 
-    switch (S)
-    {
-    case 0b11011:
-        ForWard(maxSpeed);
-        break;
-    case 0b01111:
-        Turn_Left(baseSpeed, baseSpeed + turnSpeed);
-        break;
-    case 0b11110:
-        Turn_Right(baseSpeed + turnSpeed, baseSpeed);
-        break;
-    case 0b10111:
-        Turn_Left(baseSpeed, baseSpeed - turnSpeed);
-        break;
-    case 0b11101:
-        Turn_Right(baseSpeed - turnSpeed, baseSpeed);
-        break;
-    case 0b00111:
-        Turn_Left(baseSpeed, baseSpeed);
-        break;
-    case 0b11100:
-        Turn_Right(baseSpeed, baseSpeed);
-        break;
-    default:
-        BackWard(baseSpeed);
-        break;
-    }
-}
-void Read_Button()
-{
-	int reading = Button_Read(BUTTON_ONOFF);
-	if (reading != lastButtonState)
-	{
-		Delay_ms(200);
-		if (reading != buttonState)
-		{
-			buttonState = reading;
-			if (buttonState == 0)
-			{
-				count++;
-				count %= 2;
-				Status_Robot = count;
-			}
-		}
-	}
-	lastButtonState = reading;
-}
-void Sensor_Read_All()
-{
-	for(int i = 0; i < 5; i++)
-	{
-		Sensors[i] = Sensor_Read(SENSOR_PIN1 + i);
 	}
 }
-void ForWard(int Speed)
-{
-	Motor_SetForward(MOTOR_1, Speed);
-	Motor_SetForward(MOTOR_2, Speed);
+void RePhai(double SpeedM1){
+	Motor_SetForward(MOTOR_1, SpeedM1);
+  Motor_SetStopping(MOTOR_2);
+	status_previous = 4;
 }
-void BackWard(int Speed)
-{
-	Motor_SetBackward(MOTOR_1, Speed);
-	Motor_SetBackward(MOTOR_2, Speed);
+void ReTrai(double SpeedM2){
+	Motor_SetForward(MOTOR_2, SpeedM2);
+	Motor_SetStopping(MOTOR_1);
+	status_previous = 3;
+
 }
-void Turn_Left(int Speed_M_1, int Speed_M_2)
-{
-	Motor_SetForward(MOTOR_1, Speed_M_1);
-	Motor_SetBackward(MOTOR_2, Speed_M_2);
+void dithang(double SpeedM1){
+	Motor_SetForward(MOTOR_1,SpeedM1);
+	Motor_SetForward(MOTOR_2,SpeedM1);
+	status_previous = 2;
 }
-void Turn_Right(int Speed_M_1, int Speed_M_2)
-{
-	Motor_SetBackward(MOTOR_1, Speed_M_1);
-	Motor_SetForward(MOTOR_2, Speed_M_2);
+uint16_t SensorRead(uint16_t pin){
+	if(GPIO_ReadInputDataBit(SENSOR_PORT, pin) == Bit_SET)
+		return SENSOR_ON;
+	else
+		return SENSOR_OFF;
 }
 
+void oldstatus(){
+	if (status_previous == 2)
+		dithang(30);
+	else if (status_previous == 3)
+		ReTrai(30);
+	else if (status_previous == 4)
+		RePhai(30);
+
+}
