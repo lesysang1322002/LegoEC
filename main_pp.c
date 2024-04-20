@@ -98,8 +98,8 @@ void PID(uint16_t distance)
         dithang(80);
         break;
     case 400:
-        Motor_SetForward(MOTOR_1, 70); // co the tang
-        Motor_SetBackward(MOTOR_2, 20);
+        Motor_SetForward(MOTOR_1, 60); // co the tang
+        Motor_SetBackward(MOTOR_2, 25);
         break;
     case 500:
         Motor_SetForward(MOTOR_1, 60);
@@ -118,8 +118,8 @@ void PID(uint16_t distance)
         Motor_SetForward(MOTOR_2, 25);
         break;
     case 450:
-        Motor_SetForward(MOTOR_1, 70);
-        Motor_SetBackward(MOTOR_2, 20);
+        Motor_SetForward(MOTOR_1, 60);
+        Motor_SetBackward(MOTOR_2, 25);
         break;
     default:
         break;
