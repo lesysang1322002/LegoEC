@@ -9,9 +9,13 @@ int previous_status = 0;
 void ReTrai(double SpeedM1);
 void RePhai(double SpeedM2);	
 void dithang(double SpeedM1);
+void UARTPrintf_Number(long number);
+void PID();
+void Convert(uint16_t Converted_value[]);
 void oldstatus();
 uint16_t SensorRead(uint16_t pin);
-
+int  a=0;
+float output;
 uint8_t Sensor_v[5];
 int main(void){
 	Delay_Init();
@@ -21,9 +25,11 @@ int main(void){
 	Sensor_Init();
 	USART_config();
 	GPIO_Config_TX_RX();	
-	//Motor_SetForward(2,60);
+	UARTPrintf_Number(20);
+	uint16_t i=0;
+	//Motor_SetForward(1 ,30);
 	while(1){
-	uint8_t sensor1 = Sensor_Read(SENSOR_PIN1);
+		uint8_t sensor1 = Sensor_Read(SENSOR_PIN1);
     uint8_t sensor2 = Sensor_Read(SENSOR_PIN2);
     uint8_t sensor3 = Sensor_Read(SENSOR_PIN3);
     uint8_t sensor4 = Sensor_Read(SENSOR_PIN4);
@@ -32,49 +38,63 @@ int main(void){
           
             previous_status = status_previous;
         }
+        
+        
         oldstatus();
+				output=30;
 		switch ((sensor1 << 4) | (sensor2 << 3) | (sensor3 << 2) | (sensor4 << 1) | sensor5) {
+			case 0b10001:
+				RePhai(output);
+				break;
+			case 0b11110:
+				RePhai(output);
+				break;
+			case 0b11100:
+				RePhai(output);
+				break;
+			case 0b00001:
+				ReTrai(output);
+				break;
 			case 0b10011:
-				ReTrai(30);
+				ReTrai(output);
 				break;
 			case 0b11101:
-				RePhai(30);
+				RePhai(output);
 				break;
 			case 0b11011:
-				dithang(30);
+				dithang(output);
 				break;
 			case 0b11000:
-				RePhai(30);
+				RePhai(output);
 				break;
 			case 0b00011:
-				ReTrai(30);
+				ReTrai(output);
 				break;
 			case 0b11111:
-				oldstatus();
+		    	oldstatus();
 				break;
 			default:
-		  		
+		    
 					break;
 	}
-	Delay_ms(300);
-
+		//PID();
+	
 	}
 }
 void RePhai(double SpeedM1){
 	Motor_SetForward(MOTOR_1, SpeedM1);
   Motor_SetStopping(MOTOR_2);
-	status_previous = 4;
+	status_previous = 2;
 }
 void ReTrai(double SpeedM2){
 	Motor_SetForward(MOTOR_2, SpeedM2);
 	Motor_SetStopping(MOTOR_1);
-	status_previous = 3;
+	status_previous = 1;
 
 }
 void dithang(double SpeedM1){
 	Motor_SetForward(MOTOR_1,SpeedM1);
 	Motor_SetForward(MOTOR_2,SpeedM1);
-	status_previous = 2;
 }
 uint16_t SensorRead(uint16_t pin){
 	if(GPIO_ReadInputDataBit(SENSOR_PORT, pin) == Bit_SET)
@@ -84,11 +104,10 @@ uint16_t SensorRead(uint16_t pin){
 }
 
 void oldstatus(){
-	if (status_previous == 2)
-		dithang(30);
-	else if (status_previous == 3)
-		ReTrai(30);
-	else if (status_previous == 4)
-		RePhai(30);
+	if (status_previous == 1)
+		ReTrai(output);
+	  
+	else if (status_previous == 2)
+		RePhai(output);
 
 }
