@@ -6,6 +6,8 @@
 
 #define ON 1
 #define OFF 0
+#define baseSpeed 60
+#define turnSpeed 20
 
 int count = 0;
 int buttonState = OFF;
@@ -18,7 +20,9 @@ void Turn_Right(int Speed_M_1, int Speed_M_2);
 void ForWard(int Speed);
 void BackWard(int Speed);
 void Run();
-
+void Stop();
+void Previous();
+int previous_status = 0;
 int Status_Robot = 0;
 int S1, S2, S3, S4, S5;
 
@@ -31,51 +35,184 @@ int main(void)
     Sensor_Init();
     while (1)
     {
-        Read_Button();
+        //		Read_Button();
         Sensor_Read_All();
-        Delay_ms(50);
-        if (Status_Robot == ON)
-        {
-            Run();
-        }
+        //		Delay_ms(50);
+        //		if (Status_Robot == ON)
+        //		{
+        Run();
     }
 }
 void Run()
 {
-    int weights[] = {-2, -1, 0, 1, 2};    // weights for each sensor
-    int sensors[] = {S1, S2, S3, S4, S5}; // sensor readings
-    int position = 0;                     // position of the line
-    int total = 0;                        // total sensor value
-
-    for (int i = 0; i < 5; i++)
+    switch (S1)
     {
-        position += weights[i] * (1 - sensors[i]); // invert sensor reading
-        total += (1 - sensors[i]);                 // invert sensor reading
-    }
-
-    if (total != 0)
-    {
-        position /= total;
-    }
-
-    int baseSpeed = 60;
-    int maxSpeed = 80;
-    int speedDifference = maxSpeed - baseSpeed;
-
-    if (position < 0)
-    {
-        // line is to the left
-        Turn_Left(baseSpeed + speedDifference * (-position), baseSpeed);
-    }
-    else if (position > 0)
-    {
-        // line is to the right
-        Turn_Right(baseSpeed, baseSpeed + speedDifference * position);
-    }
-    else
-    {
-        // line is straight ahead
-        Drive(baseSpeed, baseSpeed);
+    case 0:
+        switch (S2)
+        {
+        case 0:
+            switch (S3)
+            {
+            case 0:
+                switch (S4)
+                {
+                case 0:
+                    switch (S5)
+                    {
+                    case 0:
+                        // Handle S1=0, S2=0, S3=0, S4=0, S5=0
+                        break;
+                    case 1:
+                        // Handle S1=0, S2=0, S3=0, S4=0, S5=1
+                        break;
+                    }
+                    break;
+                case 1:
+                    switch (S5)
+                    {
+                    case 0:
+                        // Handle S1=0, S2=0, S3=0, S4=1, S5=0
+                        break;
+                    case 1:
+                        // Handle S1=0, S2=0, S3=0, S4=1, S5=1
+                        break;
+                    }
+                    break;
+                }
+                break;
+            case 1:
+                switch (S4)
+                {
+                case 0:
+                    switch (S5)
+                    {
+                    case 0:
+                        // Handle S1=0, S2=0, S3=1, S4=0, S5=0
+                        break;
+                    case 1:
+                        // Handle S1=0, S2=0, S3=1, S4=0, S5=1
+                        break;
+                    }
+                    break;
+                case 1:
+                    switch (S5)
+                    {
+                    case 0:
+                        // Handle S1=0, S2=0, S3=1, S4=1, S5=0
+                        break;
+                    case 1:
+                        // Handle S1=0, S2=0, S3=1, S4=1, S5=1
+                        break;
+                    }
+                    break;
+                }
+                break;
+            }
+            break;
+        case 1:
+            switch (S3)
+            {
+            case 0:
+                switch (S4)
+                {
+                case 0:
+                    switch (S5)
+                    {
+                    case 0:
+                        // Handle S1=0, S2=1, S3=0, S4=0, S5=0
+                        break;
+                    case 1:
+                        // Handle S1=0, S2=1, S3=0, S4=0, S5=1
+                        break;
+                    }
+                    break;
+                case 1:
+                    switch (S5)
+                    {
+                    case 0:
+                        // Handle S1=0, S2=1, S3=0, S4=1, S5=0
+                        break;
+                    case 1:
+                        // Handle S1=0, S2=1, S3=0, S4=1, S5=1
+                        break;
+                    }
+                    break;
+                }
+                break;
+            case 1:
+                switch (S4)
+                {
+                case 0:
+                    switch (S5)
+                    {
+                    case 0:
+                        // Handle S1=0, S2=1, S3=1, S4=0, S5=0
+                        break;
+                    case 1:
+                        // Handle S1=0, S2=1, S3=1, S4=0, S5=1
+                        break;
+                    }
+                    break;
+                case 1:
+                    switch (S5)
+                    {
+                    case 0:
+                        // Handle S1=0, S2=1, S3=1, S4=1, S5=0
+                        break;
+                    case 1:
+                        // Handle S1=0, S2=1, S3=1, S4=1, S5=1
+                        break;
+                    }
+                    break;
+                }
+                break;
+            }
+            break;
+        }
+        break;
+    case 1:
+        switch (S2)
+        {
+        case 0:
+            switch (S3)
+            {
+            case 0:
+                switch (S4)
+                {
+                case 0:
+                    switch (S5)
+                    {
+                    case 0:
+                        // Handle S1=1, S2=0, S3=0, S4=0, S5=0
+                        break;
+                    case 1:
+                        // Handle S1=1, S2=0, S3=0, S4=0, S5=1
+                        break;
+                    }
+                    break;
+                case 1:
+                    switch (S5)
+                    {
+                    case 0:
+                        // Handle S1=1, S2=0, S3=0, S4=1, S5=0
+                        break;
+                    case 1:
+                        // Handle S1=1, S2=0, S3=0, S4=1, S5=1
+                        break;
+                    }
+                    break;
+                }
+                break;
+            case 1:
+                // Handle S1=1, S2=0, S3=1, ...
+                break;
+            }
+            break;
+        case 1:
+            // Handle S1=1, S2=1, ...
+            break;
+        }
+        break;
     }
 }
 void Read_Button()
@@ -99,6 +236,7 @@ void Read_Button()
 }
 void Sensor_Read_All()
 {
+    S1 = 0, S2 = 0, S3 = 0, S4 = 0, S5 = 0;
     S1 = Sensor_Read(SENSOR_PIN1);
     S2 = Sensor_Read(SENSOR_PIN2);
     S3 = Sensor_Read(SENSOR_PIN3);
@@ -109,6 +247,7 @@ void ForWard(int Speed)
 {
     Motor_SetForward(MOTOR_1, Speed);
     Motor_SetForward(MOTOR_2, Speed);
+    int previous_status = 1;
 }
 void BackWard(int Speed)
 {
@@ -119,9 +258,25 @@ void Turn_Left(int Speed_M_1, int Speed_M_2)
 {
     Motor_SetForward(MOTOR_1, Speed_M_1);
     Motor_SetBackward(MOTOR_2, Speed_M_2);
+    int previous_status = 2;
 }
 void Turn_Right(int Speed_M_1, int Speed_M_2)
 {
     Motor_SetBackward(MOTOR_1, Speed_M_1);
     Motor_SetForward(MOTOR_2, Speed_M_2);
+    int previous_status = 3;
+}
+void Stop()
+{
+    Motor_SetStopping(MOTOR_1);
+    Motor_SetStopping(MOTOR_2);
+}
+void Previous()
+{
+    if (previous_status == 1)
+        ForWard(80);
+    else if (previous_status == 2)
+        Turn_Left(40, 4);
+    else if (previous_status == 3)
+        Turn_Right(4, 40);
 }
